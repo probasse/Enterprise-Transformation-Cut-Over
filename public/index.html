@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="app-title-tag">Go-Live Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style id="dynamic-column-styles"></style>
+</head>
+
+<body>
+  <div class="app-container">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon"></div>
+        <h1 id="app-name-display">Go-Live<br>Planner</h1>
+        <button id="sidebar-toggle-btn" class="icon-btn" title="Toggle Sidebar">
+          <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+          </svg>
+        </button>
+      </div>
+      <nav id="sidebar-nav">
+        <!-- Populated via JS -->
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <input type="text" id="app-heading-input" value="Cut-over Activities" title="Click to edit title" />
+        <div class="header-actions">
+          <span id="activity-count">0 Activities</span>
+
+          <!-- Column Toggle Dropdown -->
+          <div class="dropdown-container">
+            <button id="columns-btn" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+              <svg style="width:16px;height:16px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+              </svg>
+              <span class="btn-text">Columns</span>
+            </button>
+            <div id="columns-menu" class="dropdown-menu">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <select id="timezone-selector" class="btn btn-secondary" style="padding: 8px; appearance: menulist;">
+            <!-- Options populated dynamically in app.js if needed, or static here -->
+          </select>
+
+          <div style="width: 1px; height: 24px; background-color: var(--border-color); margin: 0 4px;"></div>
+
+          <button id="edit-mode-btn" class="btn btn-secondary" style="margin-right: 4px;">Enable Editing</button>
+
+          <button id="bulk-edit-btn" class="btn btn-secondary" style="display: none;">Edit Selected</button>
+          <button id="bulk-delete-btn" class="btn btn-danger" style="display: none;">Delete Selected</button>
+
+          <div style="width: 1px; height: 24px; background-color: var(--border-color); margin: 0 4px;"></div>
+
+          <button id="add-btn" class="btn btn-primary icon-btn"
+            style="width: 36px; height: 36px; padding: 0; border-radius: 8px;" title="New Activity">
+            <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+            </svg>
+          </button>
+
+          <button id="settings-btn" class="icon-btn"
+            style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px;"
+            title="Settings">
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="content-body">
+        <div class="table-container">
+          <table id="activities-table">
+            <thead>
+              <tr id="table-header-row">
+                <!-- Populated dynamically via app.js columnState -->
+              </tr>
+            </thead>
+            <tbody id="activities-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal for Add/Edit -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">Add Activity</h3>
+        <button class="close-btn" id="close-modal">&times;</button>
+      </div>
+      <form id="activity-form">
+        <input type="hidden" id="activity-id">
+        <div class="form-group">
+          <label for="phase">Phase</label>
+          <select id="phase">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dependency">Dependency (Finish to Start)</label>
+          <select id="dependency">
+            <option value="">None</option>
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" required placeholder="e.g. Database Migration">
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" rows="3" placeholder="Details of the activity..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="assignee">Assignee</label>
+          <select id="assignee">
+            <option value="">Unassigned</option>
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <div class="form-group" style="display: flex; gap: 12px;">
+          <div style="flex: 1;">
+            <label for="begin_time">Start Time</label>
+            <input type="datetime-local" id="begin_time">
+          </div>
+          <div style="flex: 1;">
+            <label for="end_time">End Time</label>
+            <input type="datetime-local" id="end_time">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal for Settings -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+        <h3>Configuration Settings</h3>
+        <button class="close-btn" id="close-settings-modal">&times;</button>
+      </div>
+
+      <!-- Tabs Header -->
+      <div style="display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 0; padding: 0 24px;">
+        <button id="tab-general-btn" class="tab-btn"
+          style="padding: 16px 24px; background: none; border: none; color: var(--text-primary); cursor: pointer; border-bottom: 2px solid var(--accent-color); font-weight: 600;">General
+          Configuration</button>
+        <button id="tab-team-btn" class="tab-btn"
+          style="padding: 16px 24px; background: none; border: none; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; font-weight: 600;">Team
+          Management</button>
+      </div>
+
+      <div style="padding: 24px; max-height: 60vh; overflow-y: auto;">
+
+        <!-- General Tab Content -->
+        <div id="tab-general-content" class="tab-content">
+          <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.9rem;">
+            Define the sequence of Phases and Statuses. The first status will be used as "Not Started", and the last
+            status will be tracked as "Completed" for process time tracking. Use drag handles to reorder.
+          </p>
+
+          <div style="margin-bottom: 24px;">
+            <h4 style="margin-bottom: 12px; font-weight: 600;">App Name</h4>
+            <input type="text" id="settings-app-name-input" placeholder="Enter App Name"
+              style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); max-width: 300px;">
+          </div>
+
+          <div style="display: flex; gap: 24px;">
+            <!-- Phases Config -->
+            <div style="flex: 1;">
+              <h4 style="margin-bottom: 12px; font-weight: 600;">Phases</h4>
+              <div id="settings-phases-list" class="sortable-list">
+                <!-- Rendered via JS -->
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <input type="text" id="new-phase-input" placeholder="New Phase"
+                  style="flex:1; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                <button class="btn btn-secondary" id="add-phase-btn" style="padding: 8px 12px;">Add</button>
+              </div>
+            </div>
+
+            <!-- Statuses Config -->
+            <div style="flex: 1;">
+              <h4 style="margin-bottom: 12px; font-weight: 600;">Statuses</h4>
+              <div id="settings-statuses-list" class="sortable-list">
+                <!-- Rendered via JS -->
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <input type="text" id="new-status-input" placeholder="New Status"
+                  style="flex:1; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                <button class="btn btn-secondary" id="add-status-btn" style="padding: 8px 12px;">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Management Tab Content -->
+        <div id="tab-team-content" class="tab-content" style="display: none;">
+
+          <div style="display: flex; gap: 32px;">
+            <!-- Work Hours Config -->
+            <div style="flex: 1; max-width: 300px;">
+              <h4 style="margin-bottom: 12px; font-weight: 600;">Work Hours Policies</h4>
+              <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 0.85rem;">Define shifts or working
+                hours to apply to team members.</p>
+
+              <div id="settings-workhours-list" class="sortable-list" style="margin-bottom: 12px;">
+                <!-- Rendered via JS -->
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <input type="text" id="new-workhour-input" placeholder="e.g. Standard 9AM-5PM"
+                  style="flex:1; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                <button class="btn btn-secondary" id="add-workhour-btn" style="padding: 8px 12px;">Add</button>
+              </div>
+            </div>
+
+            <!-- Assignees Config -->
+            <div style="flex: 2; border-left: 1px solid var(--border-color); padding-left: 32px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h4 style="font-weight: 600;">Assignees</h4>
+                <button class="btn btn-primary" id="show-add-assignee-btn"
+                  style="padding: 6px 12px; font-size: 0.85rem;">+ Add Assignee</button>
+              </div>
+
+              <div id="settings-assignees-list" class="sortable-list" style="margin-bottom: 16px;">
+                <!-- Rendered via JS -->
+              </div>
+
+              <!-- Add Assignee Form -->
+              <div id="add-assignee-form-container"
+                style="display: none; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
+                <h5 style="margin-bottom: 12px; font-weight: 600; font-size: 1rem;" id="assignee-form-title">New
+                  Assignee</h5>
+                <input type="hidden" id="assignee-id">
+
+                <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                  <div style="flex: 1;">
+                    <label
+                      style="display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-secondary);">First
+                      Name *</label>
+                    <input type="text" id="assignee-firstname"
+                      style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                  </div>
+                  <div style="flex: 1;">
+                    <label
+                      style="display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-secondary);">Last
+                      Name *</label>
+                    <input type="text" id="assignee-lastname"
+                      style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                  <div style="flex: 1;">
+                    <label
+                      style="display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-secondary);">Email
+                      *</label>
+                    <input type="email" id="assignee-email"
+                      style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                  </div>
+                  <div style="flex: 1;">
+                    <label
+                      style="display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-secondary);">Phone</label>
+                    <input type="tel" id="assignee-phone"
+                      style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary);">
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                  <div style="flex: 1;">
+                    <label
+                      style="display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-secondary);">Time
+                      Zone *</label>
+                    <select id="assignee-timezone"
+                      style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); appearance: menulist;">
+                      <!-- Populated via JS using standard timezones from the app -->
+                    </select>
+                  </div>
+                  <div style="flex: 1;">
+                    <label
+                      style="display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-secondary);">Work
+                      Hours Policy *</label>
+                    <select id="assignee-workhours"
+                      style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); appearance: menulist;">
+                      <!-- Populated via JS -->
+                    </select>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                  <button type="button" class="btn btn-secondary" id="cancel-assignee-btn"
+                    style="padding: 6px 12px; font-size: 0.85rem;">Cancel</button>
+                  <button type="button" class="btn btn-primary" id="save-assignee-btn"
+                    style="padding: 6px 12px; font-size: 0.85rem;">Save Assignee</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer" style="padding: 16px 24px;">
+        <button type="button" class="btn btn-secondary" id="cancel-settings-btn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center; padding: 32px 24px;">
+      <div style="margin-bottom: 24px;">
+        <svg style="width: 48px; height: 48px; color: var(--danger-color); margin-bottom: 16px;" viewBox="0 0 24 24">
+          <path fill="currentColor"
+            d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+        </svg>
+        <h3 style="margin-bottom: 8px;">Delete Confirmation</h3>
+        <p id="confirm-message" style="color: var(--text-secondary);"></p>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" id="confirm-cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-ok-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for History / Edit Log -->
+  <div class="modal-overlay" id="history-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>Activity History</h3>
+        <button class="close-btn" id="close-history-modal">&times;</button>
+      </div>
+      <div style="padding: 24px;">
+        <div id="history-list"
+          style="display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto;">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="modal-footer" style="margin-top: 24px;">
+          <button type="button" class="btn btn-secondary" id="cancel-history-btn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

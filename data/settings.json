@@ -1,0 +1,38 @@
+{
+  "appName": "Production Planner",
+  "phases": [
+    "Pre-Cutover",
+    "Ramp down",
+    "Ramp up",
+    "Cutover",
+    "Post-Go-Live"
+  ],
+  "statuses": [
+    "Started",
+    "Pending",
+    "In Progress",
+    "Completed"
+  ],
+  "activityListTitle": "2026 ERP Consolidation",
+  "workHours": [
+    {
+      "id": "1771685159254",
+      "label": "Standard Shift"
+    },
+    {
+      "id": "1771685308668",
+      "label": "NightShift"
+    }
+  ],
+  "assignees": [
+    {
+      "id": "1771685166202",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john@example.com",
+      "phone": "",
+      "timezone": "America/New_York",
+      "workHoursId": "1771685159254"
+    }
+  ]
+}
